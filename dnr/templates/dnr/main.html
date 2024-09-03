@@ -1,0 +1,163 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order Dashboard</title>
+    <style>
+        body{
+        font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+
+        .header {
+            background-color: #ffcf40;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .header h1 {
+            margin: 0;
+            font-size: 24px;
+        }
+
+        .create-order {
+            background-color: #00aaff;
+            color: white;
+            text-align: center;
+            padding: 15px;
+            margin: 0;
+            cursor: pointer;
+        }
+
+        .order-dashboard {
+            display: flex;
+            justify-content: space-around;
+            padding: 20px;
+        }
+
+        .column {
+            background-color: white;
+            border-radius: 5px;
+            width: 22%;
+            padding: 20px;
+        }
+
+        .column h2 {
+            text-align: center;
+            font-size: 20px;
+            margin-bottom: 20px;
+            color: white;
+        }
+
+        .column-yellow h2 {
+            background-color: #ffcf40;
+        }
+
+        .column-orange h2 {
+            background-color: #ffa500;
+        }
+
+        .column-blue h2 {
+            background-color: #00aaff;
+        }
+
+        .column-dark-blue h2 {
+            background-color: #0057a3;
+        }
+
+        .order-card {
+            background-color: white;
+            border: 1px solid #ddd;
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+        }
+
+        .order-card h3 {
+            margin: 0;
+            font-size: 18px;
+        }
+
+        .order-card p {
+            margin: 5px 0;
+            font-size: 14px;
+        }
+
+        .order-card .price {
+            font-weight: bold;
+            text-align: right;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Задачи</h1>
+    </div>
+
+    <div class="create-order"><a href="{% url 'order' %}">+ Создать заказ</a></div>
+
+    <div class="order-dashboard">
+        <div class="column column-yellow" ondrop="drop(event)" ondragover="allowDrop(event)">
+            <h2>В процессе</h2>
+            {% for order in orders.in_progress %}
+                <div class="order-card" id="card-{{ order.id }}" draggable="true" ondragstart="drag(event)">
+                    <h3>Заказ {{ order.number }}</h3>
+                    <p>Клиент: {{ order.client }}</p>
+                    <p>Адрес: {{ order.address }}</p>
+                    <div class="price">{{ order.price }} тг</div>
+                </div>
+            {% empty %}
+                <p>Нет заказов в процессе.</p>
+            {% endfor %}
+        </div>
+
+        <div class="column column-orange" ondrop="drop(event)" ondragover="allowDrop(event)">
+            <h2>Готов для доставки</h2>
+            {% for order in orders.ready_for_delivery %}
+                <div class="order-card" id="card-{{ order.id }}" draggable="true" ondragstart="drag(event)">
+                    <h3>Заказ {{ order.number }}</h3>
+                    <p>Клиент: {{ order.client }}</p>
+                    <p>Адрес: {{ order.address }}</p>
+                    <div class="price">{{ order.price }} тг</div>
+                </div>
+            {% empty %}
+                <p>Нет заказов, готовых для доставки.</p>
+            {% endfor %}
+        </div>
+
+        <div class="column column-blue" ondrop="drop(event)" ondragover="allowDrop(event)">
+            <h2>В пути</h2>
+            {% for order in orders.in_transit %}
+                <div class="order-card" id="card-{{ order.id }}" draggable="true" ondragstart="drag(event)">
+                    <h3>Заказ {{ order.number }}</h3>
+                    <p>Клиент: {{ order.client }}</p>
+                    <p>Адрес: {{ order.address }}</p>
+                    <div class="price">{{ order.price }} тг</div>
+                </div>
+            {% empty %}
+                <p>Нет заказов в пути.</p>
+            {% endfor %}
+        </div>
+
+        <div class="column column-dark-blue" ondrop="drop(event)" ondragover="allowDrop(event)">
+            <h2>Завершен</h2>
+            {% for order in orders.completed %}
+                <div class="order-card" id="card-{{ order.id }}" draggable="true" ondragstart="drag(event)">
+                    <h3>Заказ {{ order.number }}</h3>
+                    <p>Клиент: {{ order.client }}</p>
+                    <p>Адрес: {{ order.address }}</p>
+                    <div class="price">{{ order.price }} тг</div>
+                </div>
+            {% empty %}
+                <p>Нет завершенных заказов.</p>
+            {% endfor %}
+        </div>
+    </div>
+
+    <script src="{% static 'main.js' %}"></script>
+</body>
+</html>
